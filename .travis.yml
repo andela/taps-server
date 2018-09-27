@@ -1,4 +1,4 @@
-after_success: 
+after_success:
   - npm run coveralls
   - npm run codecov
 before_script:
