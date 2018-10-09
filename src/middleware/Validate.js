@@ -49,7 +49,7 @@ const createTeamMemberRules = {
 };
 
 const createRequestRules = {
-  type: 'required|string',
+  type: 'in:admin_request,member_request',
   data: 'string'
 };
 
