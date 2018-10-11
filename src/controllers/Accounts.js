@@ -57,10 +57,49 @@ export default class Accounts {
         }
         response.invitedUser =
         await ptIntegration.project.addUser(
-          req.existingAccount.response.created.id,
           req.existingUser.email,
+          req.existingAccount.response.created.id,
           {
             role,
+          }
+        );
+
+        return res.sendSuccess({ response });
+      } else if (req.existingAccount.type === 'github_repo' || req.existingAccount.type === 'github_private_repo') {
+        let permission;
+        switch (req.existingMember.role) {
+          case 'lead':
+            permission = 'admin';
+            break;
+          case 'developer':
+            permission = 'push';
+            break;
+          case 'member':
+            permission = 'pull';
+            break;
+          default:
+            permission = 'pull';
+        }
+        response.invitedUser =
+        await githubIntegration.repo.addUser(
+          req.existingUser.githubUsername,
+          req.existingAccount.response.created.name,
+          {
+            permission,
+          }
+        );
+
+        return res.sendSuccess({ response });
+      } else if (req.existingAccount.type === 'slack_channel' || req.existingAccount.type === 'slack_private_channel') {
+        const channel = req.existingAccount.response.created.channel ||
+        req.existingAccount.response.created.group;
+        response.invitedUser =
+        await slackIntegration.channel.addUser(
+          req.existingUser.slackId,
+          channel.id,
+          {
+            // private: !(!(req.existingAccount.response.created.group)),
+            private: (typeof req.existingAccount.response.created.group !== 'undefined'),
           }
         );
 
@@ -108,15 +147,14 @@ export default class Accounts {
             private: (req.body.type === 'github_private_repo'),
             description: req.body.description,
             organization: config.GITHUB_ORGANIZATION,
-            type: 'org'
+            type: 'org',
+            user: req.user // invite the current user to the repo
           }
         );
 
         if (response.created.ok === false) {
           throw new Error('Could not create Github repo.');
         }
-
-        // TODO: invite the current user to the repo
 
         req.body.url = response.created.html_url;
       } else if (req.body.type === 'pt_project' ||
@@ -138,14 +176,15 @@ export default class Accounts {
 
         req.body.url = `https://www.pivotaltracker.com/projects/${response.created.id}`;
       } else if (req.body.type === 'slack_channel' ||
-      req.body.type === 'slack_group') {
+      req.body.type === 'slack_private_channel') {
         response =
         await slackIntegration.channel.create(
           req.body.name,
           {
-            private: (req.body.type === 'slack_group'),
+            private: (req.body.type === 'slack_private_channel'),
             purpose: req.body.description,
-            topic: req.existingTeam.description
+            topic: req.existingTeam.description,
+            user: req.user // invite the current user to the project
           }
         );
 
@@ -156,7 +195,7 @@ export default class Accounts {
         // TODO: invite the current user to the channel/group
 
         req.body.url =
-        `/messages/${(req.body.type === 'slack_group') ? response.created.group.id : response.created.channel.id}`;
+        `/messages/${(req.body.type === 'slack_private_channel') ? response.created.group.id : response.created.channel.id}`;
       }
 
       const account = await models.Account.create({

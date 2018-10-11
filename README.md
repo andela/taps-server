@@ -1,14 +1,11 @@
-# andela-teams-core
+# taps-server
 
 This is the core server side for [Andela Teams](https://andela-teams.herokuapp.com).
 
 [![Andela](https://andela-badge.herokuapp.com/)](https://andela.com)
-[![Build Status](https://travis-ci.org/andela-stuff/andela-teams-core.svg?branch=staging)](https://travis-ci.org/andela-stuff/andela-teams-core)
-[![CircleCI](https://circleci.com/gh/andela-stuff/andela-teams-core.svg?style=svg)](https://circleci.com/gh/andela-stuff/andela-teams-core)
-[![Coverage Status](https://coveralls.io/repos/github/andela-stuff/andela-teams-core/badge.svg?branch=staging)](https://coveralls.io/github/andela-stuff/andela-teams-core?branch=staging)
-[![codecov](https://codecov.io/gh/andela-stuff/andela-teams-core/branch/staging/graph/badge.svg)](https://codecov.io/gh/andela-stuff/andela-teams-core)
+[![Build Status](https://travis-ci.org/andela/taps-server.svg?branch=staging)](https://travis-ci.org/andela/taps-server)
+[![Coverage Status](https://coveralls.io/repos/github/andela/taps-server/badge.svg?branch=integrate-coveralls-160796474)](https://coveralls.io/github/andela/taps-server?branch=integrate-coveralls-160796474)
 [![Hound CI](https://camo.githubusercontent.com/23ee7a697b291798079e258bbc25434c4fac4f8b/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f50726f7465637465645f62792d486f756e642d6138373364312e737667)](https://houndci.com)
-[![Heroku](https://heroku-badge.herokuapp.com/?app=andela-teams-core)](https://andela-teams-core.herokuapp.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Andela Teams seeks to automate some of the routine actions taken by __simulations learning facilitators__ at Andela.
@@ -32,6 +29,39 @@ To see how this project integrates with third party APIs checkout [Third Party I
 
 ## Usage
 
+### Prerequisites ###
+You are going to need
+* Linux, macOS or Windows
+* node version 9.7.1
+* yarn version 1.5.1
+* npm version 5.6.0
+* Postgresql
+* `sequelize-cli` installed globally
+
+
+### Getting Set Up ###
+* Clone this repository to your local machine
+```
+$ git clone https://github.com/andela/taps-server.git
+```
+* Change directory into the taps-server directory
+```
+$ cd taps-server
+```
+* Install all required dependencies by running
+```
+$ yarn install
+```
+* Once installation is done, create a .env file and fill it with the neccessary environment variables **(see .env-sample for the neccessary environment variables required)**
+* Create a database to be used with the application
+* Migrate database by running
+```
+$ sequelize db:migrate
+```
+* To start the application, run
+```
+npm run start:dev
+```
 ## Testing
 
 This project uses [Mocha](https://mochajs.org/), [Chai](http://chaijs.com/) and [Chai-Http](http://chaijs.com/plugins/chai-http/) for testing.
@@ -41,8 +71,7 @@ This project uses [Mocha](https://mochajs.org/), [Chai](http://chaijs.com/) and 
 
 ## API Docs
 
-* [Swagger](https://andela-teams-core.herokuapp.com/).
-* [Postman](https://documenter.getpostman.com/view/129342/RWaGVAD9)
+* [Swagger](https://ghoulies-taps-server.herokuapp.com/doc/).
 
 ## Contributing
 

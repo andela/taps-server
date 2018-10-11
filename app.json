@@ -1,0 +1,16 @@
+{
+    "name": "taps-server",
+    "scripts": {},
+    "env": {
+      "DATABASE_URL":{
+        "required": true
+      },
+      "SECRET":{
+        "required": true
+      }
+    },
+    "formation": {},
+    "addons": [],
+    "buildpacks": []
+  }
+  
