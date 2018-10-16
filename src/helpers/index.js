@@ -224,12 +224,26 @@ async function updateUserAttributes(user, req) {
   return user;
 }
 
+/**
+ * @method updateRequestAttributes
+ * @desc Return updated request details
+ *
+ * @param { object } request the input request object
+ *
+ * @returns { object } the output request object
+ */
+function updateRequestAttributes(request) {
+  request = request.get();
+  return request;
+}
+
 export default {
   Misc: {
     generatePaginationMeta,
     updateAccountAttributes,
     updateFavoriteAttributes,
     updateMembershipAttributes,
+    updateRequestAttributes,
     updateTeamAttributes,
     updateUserAttributes,
   }
