@@ -35,6 +35,33 @@ routes.get(
   membersController.getById
 );
 */
+
+/**
+   * @swagger
+   * /v1/teams/:teamId/accounts:
+   *   get:
+   *     description: Return the all the account
+   *     with the specified team id
+   *     produces:
+   *      - application/json
+   *     responses:
+   *       200:
+   *         description: teamAccounts
+   *         schema:
+   *           type: object
+   *           items:
+   *             $ref: '#/definitions/ResponseBody'
+   */
+routes.get(
+  '/:teamId/accounts',
+  middleware.check.teamWithParamsIdExists,
+  middleware.pagination,
+  middleware.search,
+  middleware.sort,
+  middleware.filter,
+  accountsController.get
+);
+
 routes.post(
   '/:teamId/accounts',
   middleware.check.teamWithParamsIdExists,

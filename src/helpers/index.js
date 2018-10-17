@@ -109,6 +109,19 @@ function updateFavoriteAttributes(favorite) {
 }
 
 /**
+ * @method updateAccountAttributes
+ * @desc Return updated account details
+ *
+ * @param { object } account the input account object
+ *
+ * @returns { object } the output account object
+ */
+function updateAccountAttributes(account) {
+  account = account.get();
+  return account;
+}
+
+/**
  * @method updateMembershipAttributes
  * @desc Return updated membership details
  *
@@ -217,6 +230,7 @@ export default {
     updateFavoriteAttributes,
     updateMembershipAttributes,
     updateTeamAttributes,
-    updateUserAttributes
+    updateUserAttributes,
+    updateAccountAttributes
   }
 };
