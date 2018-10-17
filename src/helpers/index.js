@@ -135,6 +135,19 @@ function updateMembershipAttributes(membership) {
 }
 
 /**
+ * @method updateRequestAttributes
+ * @desc Return updated request details
+ *
+ * @param { object } request the input request object
+ *
+ * @returns { object } the output request object
+ */
+function updateRequestAttributes(request) {
+  request = request.get();
+  return request;
+}
+
+/**
  * @method updateTeamAttributes
  * @desc Return updated team details
  *
@@ -222,19 +235,6 @@ async function updateUserAttributes(user, req) {
   delete user.password;
 
   return user;
-}
-
-/**
- * @method updateRequestAttributes
- * @desc Return updated request details
- *
- * @param { object } request the input request object
- *
- * @returns { object } the output request object
- */
-function updateRequestAttributes(request) {
-  request = request.get();
-  return request;
 }
 
 export default {

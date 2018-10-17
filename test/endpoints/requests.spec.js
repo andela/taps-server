@@ -45,6 +45,26 @@ describe('Tests for /v1/requests', () => {
     });
   });
 
+  describe('GET: /v1/requests', (done) => {
+    it('should get all requests', (done) => {
+      chai.request(server)
+        .get('/v1/requests')
+        .set('x-teams-user-token', mock.user1.token)
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.have.property('data');
+          expect(res.body.data).to.be.an('Object');
+          res.body.data.should.have.property('requests');
+          expect(res.body.data.requests).to.be.an('Array')
+            .that.is.not.empty;
+          expect(res.body.data.requests.length).to.equal(1);
+          expect(res.body.data.requests[0].type)
+            .to.equal(mock.adminRequest.type);
+          done();
+        });
+    });
+  });
+
   describe('POST: /v1/requests', (done) => {
     it('should not create a request without type', (done) => {
       chai.request(server)
@@ -104,24 +124,6 @@ describe('Tests for /v1/requests', () => {
             .to.include('You have made a request with the same type.');
           done();
         });
-    });
-  });
-
-  describe('GET: /v1/requests', (done) => {
-    it('should get all requests', (done) => {
-      chai.request(server)
-        .get('/v1/requests')
-        .set('x-teams-user-token', mock.user1.token)
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.body.should.have.property('data');
-          expect(res.body.data).to.be.an('Object');
-          res.body.data.should.have.property('requests');
-          expect(res.body.data.requests[0].type)
-            .to.equal(mock.adminRequest.type);
-        });
-
-      done();
     });
   });
 });
