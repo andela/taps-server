@@ -96,19 +96,6 @@ function generatePaginationMeta(req, dbResult, limit = 20, offset = 0) {
 }
 
 /**
- * @method updateFavoriteAttributes
- * @desc Return updated favorite details
- *
- * @param { object } favorite the input favorite object
- *
- * @returns { object } the output favorite object
- */
-function updateFavoriteAttributes(favorite) {
-  favorite = favorite.get();
-  return favorite;
-}
-
-/**
  * @method updateAccountAttributes
  * @desc Return updated account details
  *
@@ -119,6 +106,19 @@ function updateFavoriteAttributes(favorite) {
 function updateAccountAttributes(account) {
   account = account.get();
   return account;
+}
+
+/**
+ * @method updateFavoriteAttributes
+ * @desc Return updated favorite details
+ *
+ * @param { object } favorite the input favorite object
+ *
+ * @returns { object } the output favorite object
+ */
+function updateFavoriteAttributes(favorite) {
+  favorite = favorite.get();
+  return favorite;
 }
 
 /**
@@ -227,10 +227,10 @@ async function updateUserAttributes(user, req) {
 export default {
   Misc: {
     generatePaginationMeta,
+    updateAccountAttributes,
     updateFavoriteAttributes,
     updateMembershipAttributes,
     updateTeamAttributes,
     updateUserAttributes,
-    updateAccountAttributes
   }
 };
