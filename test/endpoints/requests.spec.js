@@ -26,16 +26,23 @@ const should = chai.should();
 const { expect } = chai;
 chai.use(chaiHttp);
 
+let user0 = {};
 let user1 = {};
-let user = {};
+let request = {};
 
 describe('Tests for /v1/requests', () => {
-  before(async () => {
+  beforeEach(async () => {
     await models.Request.destroy({ where: {} });
     await models.User.destroy({ where: {} });
+    user0 = await models.User.create(mock.user0);
+    mock.user0.token = jwt.sign({ email: mock.user0.email }, config.SECRET);
+    user0.token = mock.user0.token;
     user1 = await models.User.create(mock.user1);
     mock.user1.token = jwt.sign({ email: mock.user1.email }, config.SECRET);
     user1.token = mock.user1.token;
+    request = await models.Request.create({
+      ...mock.adminRequest, userId: user1.id
+    });
   });
 
   describe('POST: /v1/requests', (done) => {
@@ -72,8 +79,8 @@ describe('Tests for /v1/requests', () => {
     it('should create a request if the user enters valid type and data', (done) => {
       chai.request(server)
         .post('/v1/requests')
-        .send({ ...mock.adminRequest, userId: user1.id })
-        .set('x-teams-user-token', mock.user1.token)
+        .send({ ...mock.adminRequest, userId: user0.id })
+        .set('x-teams-user-token', mock.user0.token)
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.property('data');
@@ -85,18 +92,9 @@ describe('Tests for /v1/requests', () => {
     });
 
     it('should not create a request if the user already had a request with the same type', (done) => {
-      before(async () => {
-        user = await models.User.create(mock.user1);
-        mock.user1.token = jwt.sign({ email: mock.user1.email }, config.SECRET);
-        user.token = mock.user1.token;
-
-        await models.Request.create({
-          ...mock.adminRequest, userId: user.id
-        });
-      });
       chai.request(server)
         .post('/v1/requests')
-        .send({ ...mock.adminRequest, userId: user.id })
+        .send({ ...mock.adminRequest, userId: user1.id })
         .set('x-teams-user-token', mock.user1.token)
         .end((err, res) => {
           res.should.have.status(200);
@@ -106,6 +104,24 @@ describe('Tests for /v1/requests', () => {
             .to.include('You have made a request with the same type.');
           done();
         });
+    });
+  });
+
+  describe('GET: /v1/requests', (done) => {
+    it('should get all requests', (done) => {
+      chai.request(server)
+        .get('/v1/requests')
+        .set('x-teams-user-token', mock.user1.token)
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.have.property('data');
+          expect(res.body.data).to.be.an('Object');
+          res.body.data.should.have.property('requests');
+          expect(res.body.data.requests[0].type)
+            .to.equal(mock.adminRequest.type);
+        });
+
+      done();
     });
   });
 });
