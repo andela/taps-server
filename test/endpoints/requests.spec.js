@@ -30,6 +30,7 @@ let user0 = {};
 let user1 = {};
 let user2 = {};
 let request = {};
+let request0 = {};
 let request1 = {};
 let request2 = {};
 
@@ -160,6 +161,32 @@ describe('Tests for /v1/requests', () => {
           res.body.data.should.have.property('acceptedUsers');
           expect(res.body.data.acceptedUsers.length).to.equal(1);
           expect(res.body.data.acceptedUsers[0].id).to.equal(user1.id);
+          done();
+        });
+    });
+  });
+
+  describe('DELETE: /v1/requests', (done) => {
+    it('should reject the user\'s requests by deleting the requests', (done) => {
+      before(async () => {
+        user1 = await models.User.create(user1);
+        user2 = await models.User.create(user2);
+        request0 = await models.Request.create({
+          ...mock.adminRequest, userId: user1.id
+        });
+        request1 = await models.Request.create({
+          ...mock.adminRequest, userId: user2.id
+        });
+      });
+      chai.request(server)
+        .delete('/v1/requests')
+        .send({ requestIds: [request0.id, request1.id] })
+        .set('x-teams-user-token', mock.user0.token)
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.have.property('data');
+          expect(res.body.data).to.be.an('Object').that.is.empty;
+          expect(res.body.errors).to.be.undefined;
           done();
         });
     });
