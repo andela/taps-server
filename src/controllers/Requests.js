@@ -148,13 +148,21 @@ export default class Requests {
       });
 
       // Get all the updated user's details
-      const acceptedUsers = await models.User.findAll({
+      const users = await models.User.findAll({
         where: {
           id: {
             [Op.in]: userIds
           }
         }
       });
+
+      const acceptedUsers = [];
+      // eslint-disable-next-line no-restricted-syntax
+      for (const user of users) {
+        // eslint-disable-next-line no-await-in-loop
+        const u = await helpers.Misc.updateUserAttributes(user, req);
+        acceptedUsers.push(u);
+      }
 
       return res.sendSuccess({ acceptedUsers });
     } catch (error) {
